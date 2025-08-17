@@ -98,7 +98,7 @@ done
 
 sed -i 's/#Color/Color/g' /etc/pacman.conf
 echo "installing plasma"
-pacman -Sy --noconfirm --needed plasma sddm sddm-kcm xorg wayland kate konsole yakuake ark dolphin dolphin-plugins networkmanager kdeconnect wqy-microhei kwalletmanager partitionmanager
+pacman -Sy --noconfirm --needed plasma sddm sddm-kcm xorg wayland kate konsole yakuake ark dolphin dolphin-plugins networkmanager kdeconnect wqy-microhei kwalletmanager partitionmanager plasma-x11-session
 echo "configuring plasma"
 systemctl enable NetworkManager
 systemctl enable sddm
