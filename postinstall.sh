@@ -113,5 +113,6 @@ echo "configuring fcitx5"
 sudo -u $username paru -S --noconfirm --needed fcitx5-input-support
 echo "installing chrome"
 sudo -u $username paru -S --noconfirm --needed google-chrome
-echo "install finished"
+fastfetch
+echo "install finished, reboot to use your new system"
 
