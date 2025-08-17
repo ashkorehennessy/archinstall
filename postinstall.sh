@@ -17,8 +17,7 @@ echo "configuring sudo"
 chmod +w /etc/sudoers
 for ((;;))
 do
-	echo "would you want to run sudo without password? (y/*)"
-	read sn
+	read -p "would you want to run sudo without password? (y/*)" sn
 	case $sn in
 		"y")
 			sed -i 's/^# %wheel ALL=(ALL:ALL) NOPASSWD: ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers
@@ -41,7 +40,8 @@ do
 				for dev in /dev/sd[a-z]* /dev/vd[a-z]* /dev/mmcblk[0-9]* /dev/nvme[0-9]*n[0-9]*; do
 					[[ -e "$dev" ]] && echo "$dev"
 				done
-				read -p "enter EFi partition to install or install to vdisk (v) ;parted(p)" ef
+				echo "enter EFi partition to install or install to vdisk (v) ;parted(p)"
+				read ef
 				case $ef in
 					"p")
 						parted
@@ -76,7 +76,8 @@ do
 							for dev in /dev/sd[a-z] /dev/vd[a-z] /dev/mmcblk[0-9] /dev/nvme[0-9]*n[0-9]; do
 								[[ -e "$dev" ]] && echo "$dev"
 							done
-							read -p "enter device to be installed" de
+							echo "enter device to be installed"
+							read de
 							grub-install --target=x86_64-efi --efi-directory=/boot/EFI $de
 							grub-mkconfig > /boot/grub/grub.cfg
 							break 3
@@ -106,8 +107,9 @@ echo "configuring archlinuxcn"
 echo '[archlinuxcn]' >> /etc/pacman.conf
 echo 'Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch' >> /etc/pacman.conf
 pacman -Sy archlinuxcn-keyring
-echo "configuring fcitx5"
+echo "installing fcitx5"
 pacman -Sy paru fcitx5 fcitx5-gtk fcitx5-qt fcitx5-chinese-addons fcitx5-configtool fcitx5-breeze fcitx5-pinyin-zhwiki fcitx5-pinyin-moegirl
-paru -S fcitx5-input-support
+echo "configuring fcitx5"
+sudo -u $username paru -S fcitx5-input-support
 echo "install finished"
 

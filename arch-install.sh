@@ -33,8 +33,7 @@ do
 done
 for ((;;))
 do
-	echo "format $par? (y/*)"
-	read f
+	read -p "format $par? (y/*)" f
 	case $f in
 		"y")
 			mkfs.ext4 $par
@@ -42,8 +41,7 @@ do
 			;;
 		"n")
 			echo "without format will cause some problem after install"
-			echo "are you sure? (y/*)"
-			read nofmt
+			read -p "are you sure? (y/*)" nofmt
 			if [ $nofmt != y ]
 			then
 				continue
