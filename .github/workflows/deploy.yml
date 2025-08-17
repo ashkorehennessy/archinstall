@@ -1,4 +1,4 @@
-name: Sync to Aliyun OSS
+name: Upload scripts to Aliyun OSS
 
 on:
   push:
@@ -6,27 +6,28 @@ on:
       - main
 
 jobs:
-  deploy:
+  upload:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Install OSSUTIL
-      run: |
-        curl -o ossutil64 https://gosspublic.alicdn.com/ossutil/1.7.17/ossutil64
-        chmod +x ossutil64
-        sudo mv ossutil64 /usr/local/bin/ossutil64
+      - name: Install OSSUTIL
+        run: |
+          curl -o ossutil64 https://gosspublic.alicdn.com/ossutil/1.7.17/ossutil64
+          chmod +x ossutil64
+          sudo mv ossutil64 /usr/local/bin/ossutil64
 
-    - name: Configure OSSUTIL
-      run: |
-        ossutil64 config \
-          -e ${{ secrets.OSS_ENDPOINT }} \
-          -i ${{ secrets.OSS_ACCESS_KEY_ID }} \
-          -k ${{ secrets.OSS_ACCESS_KEY_SECRET }} \
-          -L CH
+      - name: Configure OSSUTIL
+        run: |
+          ossutil64 config \
+            -e ${{ secrets.OSS_ENDPOINT }} \
+            -i ${{ secrets.OSS_ACCESS_KEY_ID }} \
+            -k ${{ secrets.OSS_ACCESS_KEY_SECRET }} \
+            -L CH
 
-    - name: Sync files to OSS
-      run: |
-        ossutil64 cp -r ./ oss://${{ secrets.OSS_BUCKET }}/ --update
+      - name: Upload scripts to OSS
+        run: |
+          ossutil64 cp ./arch-install.sh oss://${{ secrets.OSS_BUCKET }}/ --update
+          ossutil64 cp ./postinstall.sh oss://${{ secrets.OSS_BUCKET }}/ --update
