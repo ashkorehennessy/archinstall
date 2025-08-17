@@ -6,4 +6,4 @@
 bash -c "$(curl -fsSL https://ashkorehennessy.oss-cn-shanghai.aliyuncs.com/arch-install.sh)"
 ```
 
-跟着提示完成安装即可，默认安装kde
+跟着提示完成安装即可，默认安装kde和chrome

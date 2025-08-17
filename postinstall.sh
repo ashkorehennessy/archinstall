@@ -98,7 +98,7 @@ done
 
 sed -i 's/#Color/Color/g' /etc/pacman.conf
 echo "installing plasma"
-pacman -Sy plasma sddm sddm-kcm xorg wayland kate konsole yakuake ark dolphin dolphin-plugins networkmanager kdeconnect wqy-microhei kwalletmanager partitionmanager
+pacman -Sy --noconfirm --needed plasma sddm sddm-kcm xorg wayland kate konsole yakuake ark dolphin dolphin-plugins networkmanager kdeconnect wqy-microhei kwalletmanager partitionmanager
 echo "configuring plasma"
 systemctl enable NetworkManager
 systemctl enable sddm
@@ -106,10 +106,12 @@ systemctl enable dhcpcd
 echo "configuring archlinuxcn"
 echo '[archlinuxcn]' >> /etc/pacman.conf
 echo 'Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch' >> /etc/pacman.conf
-pacman -Sy archlinuxcn-keyring
+pacman -Sy --noconfirm --needed archlinuxcn-keyring
 echo "installing fcitx5"
-pacman -Sy paru fcitx5 fcitx5-gtk fcitx5-qt fcitx5-chinese-addons fcitx5-configtool fcitx5-breeze fcitx5-pinyin-zhwiki fcitx5-pinyin-moegirl
+pacman -Sy --noconfirm --needed paru fcitx5 fcitx5-gtk fcitx5-qt fcitx5-chinese-addons fcitx5-configtool fcitx5-breeze fcitx5-pinyin-zhwiki fcitx5-pinyin-moegirl
 echo "configuring fcitx5"
-sudo -u $username paru -S fcitx5-input-support
+sudo -u $username paru -S --noconfirm --needed fcitx5-input-support
+echo "installing chrome"
+sudo -u $username paru -S --noconfirm --needed google-chrome
 echo "install finished"
 
