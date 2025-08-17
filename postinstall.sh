@@ -1,6 +1,5 @@
 #!/bin/bash
 #by Ashkore
-source /root/newroot
 echo "set timezone to Asia/Shanghai"
 ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 hwclock --systohc
@@ -18,7 +17,7 @@ echo "configuring sudo"
 chmod +w /etc/sudoers
 for ((;;))
 do
-	echo "would you want to run sudo without password? (y/n)"
+	echo "would you want to run sudo without password? (y/*)"
 	read sn
 	case $sn in
 		"y")

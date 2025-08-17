@@ -33,7 +33,7 @@ do
 done
 for ((;;))
 do
-	echo "format $par? (y/n)"
+	echo "format $par? (y/*)"
 	read f
 	case $f in
 		"y")
@@ -42,7 +42,7 @@ do
 			;;
 		"n")
 			echo "without format will cause some problem after install"
-			echo "are you sure? (y/n)"
+			echo "are you sure? (y/*)"
 			read nofmt
 			if [ $nofmt != y ]
 			then
