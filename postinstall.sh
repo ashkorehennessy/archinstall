@@ -107,5 +107,8 @@ echo "configuring archlinuxcn"
 echo '[archlinuxcn]' >> /etc/pacman.conf
 echo 'Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch' >> /etc/pacman.conf
 pacman -Sy archlinuxcn-keyring
+echo "configuring fcitx5"
+pacman -Sy paru fcitx5 fcitx5-gtk fcitx5-qt fcitx5-chinese-addons fcitx5-configtool fcitx5-breeze fcitx5-pinyin-zhwiki fcitx5-pinyin-moegirl
+paru -S fcitx5-input-support
 echo "install finished"
 
