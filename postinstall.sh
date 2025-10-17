@@ -109,10 +109,14 @@ pacman -Sy --noconfirm --needed archlinuxcn-keyring
 echo "install fcitx5"
 pacman -Sy --noconfirm --needed paru fcitx5 fcitx5-gtk fcitx5-qt fcitx5-chinese-addons fcitx5-configtool fcitx5-breeze fcitx5-pinyin-zhwiki fcitx5-pinyin-moegirl
 echo "install some useful packages"
-echo '[aur-repo]' >> /etc/pacman.conf
-echo 'SigLevel = Optional TrustAll' >> /etc/pacman.conf
-echo 'Server = https://ashkorehennessy.oss-cn-shanghai.aliyuncs.com/aur-repo' >> /etc/pacman.conf
+echo '[ashkorehennessy]' >> /etc/pacman.conf
+echo 'SigLevel = Never' >> /etc/pacman.conf
+echo 'Server = https://ashkorehennessy.oss-cn-shanghai.aliyuncs.com/ashkorehennessy' >> /etc/pacman.conf
 pacman -Sy --noconfirm fcitx5-input-support v2rayn-bin
+sed -i '$d' /etc/pacman.conf
+sed -i '$d' /etc/pacman.conf
+sed -i '$d' /etc/pacman.conf
+pacman -Syy
 fastfetch
 echo "install finished, reboot to use your new system"
 
