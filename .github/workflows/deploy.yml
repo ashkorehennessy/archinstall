@@ -31,7 +31,7 @@ jobs:
           cd /build
           mkdir aur-build && cd aur-build
 
-          PKGS=(manjaro-asian-input-support google-chrome)
+          PKGS=(manjaro-asian-input-support v2rayn-bin)
 
           for pkg in "${PKGS[@]}"; do
             git clone https://aur.archlinux.org/${pkg}.git
@@ -45,9 +45,9 @@ jobs:
           mkdir repo
           mv aur-build/*.pkg.tar.zst repo/
           cd repo
-          repo-add aur-repo.db.tar.gz *.pkg.tar.zst
-          ln -sf aur-repo.db.tar.gz aur-repo.db
-          ln -sf aur-repo.files.tar.gz aur-repo.files
+          repo-add ashkorehennessy.db.tar.gz *.pkg.tar.zst
+          ln -sf ashkorehennessy.db.tar.gz ashkorehennessy.db
+          ln -sf ashkorehennessy.files.tar.gz ashkorehennessy.files
           EOF
 
       - name: Install OSSUTIL
@@ -68,5 +68,5 @@ jobs:
         run: |
           ossutil64 cp ./arch-install.sh oss://${{ secrets.OSS_BUCKET }}/ --update
           ossutil64 cp ./postinstall.sh oss://${{ secrets.OSS_BUCKET }}/ --update
-          ossutil64 rm oss://${{ secrets.OSS_BUCKET }}/aur-repo/ -r -f || true
-          ossutil64 cp -r /build/repo oss://${{ secrets.OSS_BUCKET }}/aur-repo/ --update
+          ossutil64 rm oss://${{ secrets.OSS_BUCKET }}/ashkorehennessy/ -r -f || true
+          ossutil64 cp -r /build/repo oss://${{ secrets.OSS_BUCKET }}/ashkorehennessy/ --update

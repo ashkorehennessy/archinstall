@@ -112,7 +112,7 @@ echo "install some useful packages"
 echo '[aur-repo]' >> /etc/pacman.conf
 echo 'SigLevel = Optional TrustAll' >> /etc/pacman.conf
 echo 'Server = https://ashkorehennessy.oss-cn-shanghai.aliyuncs.com/aur-repo' >> /etc/pacman.conf
-pacman -Sy --noconfirm fcitx5-input-support google-chrome
+pacman -Sy --noconfirm fcitx5-input-support v2rayn-bin
 fastfetch
 echo "install finished, reboot to use your new system"
 
