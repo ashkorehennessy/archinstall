@@ -108,10 +108,11 @@ echo 'Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch' >> /etc/pacman.con
 pacman -Sy --noconfirm --needed archlinuxcn-keyring
 echo "install fcitx5"
 pacman -Sy --noconfirm --needed paru fcitx5 fcitx5-gtk fcitx5-qt fcitx5-chinese-addons fcitx5-configtool fcitx5-breeze fcitx5-pinyin-zhwiki fcitx5-pinyin-moegirl
-echo "configure fcitx5"
-sudo -u $username paru -S --noconfirm --needed fcitx5-input-support
-echo "install chrome"
-sudo -u $username paru -S --noconfirm --needed google-chrome
+echo "install some useful packages"
+echo '[aur-repo]' >> /etc/pacman.conf
+echo 'SigLevel = Optional TrustAll' >> /etc/pacman.conf
+echo 'Server = https://ashkorehennessy.oss-cn-shanghai.aliyuncs.com/aur-repo' >> /etc/pacman.conf
+pacman -Sy --noconfirm fcitx5-input-support google-chrome
 fastfetch
 echo "install finished, reboot to use your new system"
 

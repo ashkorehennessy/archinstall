@@ -1,4 +1,4 @@
-name: Upload scripts to Aliyun OSS
+name: Upload
 
 on:
   push:
@@ -6,12 +6,49 @@ on:
       - main
 
 jobs:
-  upload:
+  build:
     runs-on: ubuntu-latest
+
+    container:
+      image: archlinux:latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Prepare build environment
+        run: |
+          pacman -Syu --noconfirm base-devel git curl pacman-contrib sudo
+          useradd -m ashkore
+          echo "ashkore ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+          mkdir -p /build
+          chown -R ashkore:ashkore /build
+
+      - name: Build AUR packages
+        run: |
+          sudo -u ashkore bash <<'EOF'
+          set -e
+          cd /build
+          mkdir aur-build && cd aur-build
+
+          PKGS=(manjaro-asian-input-support google-chrome)
+
+          for pkg in "${PKGS[@]}"; do
+            git clone https://aur.archlinux.org/${pkg}.git
+            cd ${pkg}
+            makepkg -sf --noconfirm
+            mv *.pkg.tar.zst ../
+            cd ..
+          done
+
+          cd ..
+          mkdir repo
+          mv aur-build/*.pkg.tar.zst repo/
+          cd repo
+          repo-add aur-repo.db.tar.gz *.pkg.tar.zst
+          ln -sf aur-repo.db.tar.gz aur-repo.db
+          ln -sf aur-repo.files.tar.gz aur-repo.files
+          EOF
 
       - name: Install OSSUTIL
         run: |
@@ -27,7 +64,9 @@ jobs:
             -k ${{ secrets.OSS_ACCESS_KEY_SECRET }} \
             -L CH
 
-      - name: Upload scripts to OSS
+      - name: Upload repo to OSS
         run: |
           ossutil64 cp ./arch-install.sh oss://${{ secrets.OSS_BUCKET }}/ --update
           ossutil64 cp ./postinstall.sh oss://${{ secrets.OSS_BUCKET }}/ --update
+          ossutil64 rm oss://${{ secrets.OSS_BUCKET }}/aur-repo/ -r -f || true
+          ossutil64 cp -r /build/repo oss://${{ secrets.OSS_BUCKET }}/aur-repo/ --update
