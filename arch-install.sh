@@ -1,9 +1,8 @@
 #!/bin/bash
 #by Ashkore
-echo "changing mirror to ustc"
-rm /etc/pacman.d/mirrorlist
+echo "change mirror to ustc"
 echo 'Server = https://mirrors.ustc.edu.cn/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
-echo "select partition to install"
+echo "enter root partition to install"
 for ((;;))
 do
 	echo "list available partitions"
@@ -54,14 +53,14 @@ do
 done
 echo "mount $par to /mnt"
 mount $par /mnt
-echo "installing base packages to new root"
+echo "install base packages to new root"
 pacstrap /mnt base linux linux-firmware dhcpcd vim sudo grub efibootmgr intel-ucode exfat-utils dosfstools openssh base-devel bash-completion unzip zip wget net-tools bind-tools htop btop fastfetch rsync
 echo "generate fstab to new root"
 genfstab -U /mnt >> /mnt/etc/fstab
-echo "downloading postinstall script"
+echo "download postinstall script"
 curl -LO https://ashkorehennessy.oss-cn-shanghai.aliyuncs.com/postinstall.sh
 cp postinstall.sh /mnt/root/postinstall.sh
 chmod +x /mnt/root/postinstall.sh
-echo "running postinstall"
+echo "run postinstall"
 arch-chroot /mnt /root/postinstall.sh
 

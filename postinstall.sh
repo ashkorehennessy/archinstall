@@ -8,12 +8,12 @@ sed -i 's/#zh_CN.UTF-8/zh_CN.UTF-8/g' /etc/locale.gen
 locale-gen
 echo "LANG=zh_CN.UTF-8" > /etc/locale.conf
 echo "LC_ALL=zh_CN.UTF-8" >> /etc/locale.conf
-echo "adding user"
+echo "add user"
 read -p "user name:" username
 useradd -m -G wheel $username
-echo "setting password"
+echo "set password"
 passwd $username
-echo "configuring sudo"
+echo "configure sudo"
 chmod +w /etc/sudoers
 for ((;;))
 do
@@ -40,7 +40,7 @@ do
 				for dev in /dev/sd[a-z]* /dev/vd[a-z]* /dev/mmcblk[0-9]* /dev/nvme[0-9]*n[0-9]*; do
 					[[ -e "$dev" ]] && echo "$dev"
 				done
-				echo "enter EFi partition to install or install to vdisk (v) ;parted(p)"
+				echo "enter EFI partition to install or install to vdisk (v) ;parted(p)"
 				read ef
 				case $ef in
 					"p")
@@ -51,7 +51,6 @@ do
 						parted efi.img mklabel gpt
 						parted efi.img mkpart esp fat32 0% 100%
 						parted efi.img set 1 esp on
-						echo "installing kpartx"
 						pacman -S multipath-tools
 						kpartx -a -v efi.img
 						mkfs.fat -F32 -s1 /dev/mapper/loop0p1
@@ -76,7 +75,7 @@ do
 							for dev in /dev/sd[a-z] /dev/vd[a-z] /dev/mmcblk[0-9] /dev/nvme[0-9]*n[0-9]; do
 								[[ -e "$dev" ]] && echo "$dev"
 							done
-							echo "enter device to be installed"
+							echo "enter device to install"
 							read de
 							grub-install --target=x86_64-efi --efi-directory=/boot/EFI $de
 							grub-mkconfig > /boot/grub/grub.cfg
@@ -97,21 +96,21 @@ do
 done
 
 sed -i 's/#Color/Color/g' /etc/pacman.conf
-echo "installing plasma"
+echo "install plasma"
 pacman -Sy --noconfirm --needed plasma sddm sddm-kcm xorg wayland kate konsole yakuake ark dolphin dolphin-plugins networkmanager kdeconnect wqy-microhei kwalletmanager partitionmanager plasma-x11-session
-echo "configuring plasma"
+echo "configure plasma"
 systemctl enable NetworkManager
 systemctl enable sddm
 systemctl enable dhcpcd
-echo "configuring archlinuxcn"
+echo "configure archlinuxcn"
 echo '[archlinuxcn]' >> /etc/pacman.conf
 echo 'Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch' >> /etc/pacman.conf
 pacman -Sy --noconfirm --needed archlinuxcn-keyring
-echo "installing fcitx5"
+echo "install fcitx5"
 pacman -Sy --noconfirm --needed paru fcitx5 fcitx5-gtk fcitx5-qt fcitx5-chinese-addons fcitx5-configtool fcitx5-breeze fcitx5-pinyin-zhwiki fcitx5-pinyin-moegirl
-echo "configuring fcitx5"
+echo "configure fcitx5"
 sudo -u $username paru -S --noconfirm --needed fcitx5-input-support
-echo "installing chrome"
+echo "install chrome"
 sudo -u $username paru -S --noconfirm --needed google-chrome
 fastfetch
 echo "install finished, reboot to use your new system"
