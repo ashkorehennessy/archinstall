@@ -34,6 +34,7 @@ do
 	read -p "install grub? (y/n)" ig
 	case $ig in
 		"y")
+		  sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g' /etc/default/grub
 			for ((;;))
 			do
 				echo "list available partitions"
