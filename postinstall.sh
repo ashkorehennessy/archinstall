@@ -1,5 +1,7 @@
 #!/bin/bash
 #by Ashkore
+echo "change mirror to ustc"
+echo 'Server = https://mirrors.ustc.edu.cn/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
 echo "set timezone to Asia/Shanghai"
 ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 hwclock --systohc
