@@ -105,6 +105,9 @@ echo "configure plasma"
 systemctl enable NetworkManager
 systemctl enable sddm
 systemctl enable dhcpcd
+echo "install audio system"
+pacman -Sy --noconfirm --needed pipewire wireplumber pipewire-pulse pipewire-alsa pipewire-jack alsa-utils sof-firmware bluez bluez-utils libldac libfreeaptx libfdk-aac
+systemctl enable bluetooth.service
 echo "configure archlinuxcn"
 echo '[archlinuxcn]' >> /etc/pacman.conf
 echo 'Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch' >> /etc/pacman.conf
