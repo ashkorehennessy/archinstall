@@ -99,15 +99,15 @@ do
 done
 
 sed -i 's/#Color/Color/g' /etc/pacman.conf
+echo "install audio system"
+pacman -Sy --noconfirm --needed pipewire wireplumber pipewire-pulse pipewire-alsa pipewire-jack alsa-utils sof-firmware bluez bluez-utils libldac libfreeaptx libfdk-aac
+systemctl enable bluetooth.service
 echo "install plasma"
 pacman -Sy --noconfirm --needed plasma sddm sddm-kcm xorg wayland kate konsole yakuake ark dolphin dolphin-plugins networkmanager kdeconnect wqy-microhei kwalletmanager partitionmanager plasma-x11-session
 echo "configure plasma"
 systemctl enable NetworkManager
 systemctl enable sddm
 systemctl enable dhcpcd
-echo "install audio system"
-pacman -Sy --noconfirm --needed pipewire wireplumber pipewire-pulse pipewire-alsa pipewire-jack alsa-utils sof-firmware bluez bluez-utils libldac libfreeaptx libfdk-aac
-systemctl enable bluetooth.service
 echo "configure archlinuxcn"
 echo '[archlinuxcn]' >> /etc/pacman.conf
 echo 'Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch' >> /etc/pacman.conf
