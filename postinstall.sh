@@ -123,6 +123,37 @@ sed -i '$d' /etc/pacman.conf
 sed -i '$d' /etc/pacman.conf
 sed -i '$d' /etc/pacman.conf
 pacman -Syy
+echo "bypass polkit? (y/*)"
+read bp
+if [ $bp == "y" ]
+then
+mkdir -p /etc/polkit-1/rules.d
+cat <<EOF > /etc/polkit-1/rules.d/99-all.rules
+polkit.addRule(function(action, subject) {
+  var userGroup = "wheel";
+  if (subject.isInGroup(userGroup)) {
+      if (action.id.indexOf("org.freedesktop.udisks2.") === 0) {
+          return polkit.Result.YES;
+      }
+      if (action.id.indexOf("org.kde.kpmcore.") === 0) {
+          return polkit.Result.YES;
+      }
+      if (action.id == "org.kde.kcontrol.kcmsddm.save") {
+          return polkit.Result.YES;
+      }
+      if (action.id.indexOf("org.freedesktop.NetworkManager.") === 0) {
+          return polkit.Result.YES;
+      }
+      if (action.id.indexOf("org.freedesktop.packagekit.") === 0) {
+          return polkit.Result.YES;
+      }
+      if (action.id.indexOf("org.freedesktop.systemd1.") === 0) {
+          return polkit.Result.YES;
+      }
+  }
+});
+EOF
+fi
 fastfetch
 echo "install finished, reboot to use your new system"
 
