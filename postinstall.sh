@@ -17,86 +17,72 @@ echo "set password"
 passwd $username
 echo "configure sudo"
 chmod +w /etc/sudoers
-for ((;;))
-do
-	read -p "would you want to run sudo without password? (y/*)" sn
-	case $sn in
-		"y")
-			sed -i 's/^# %wheel ALL=(ALL:ALL) NOPASSWD: ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers
-			break
-			;;
-		*)
-			sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
-			break
-			;;
-	esac
-done
-for ((;;))
-do
-	read -p "install grub? (y/n)" ig
-	case $ig in
-		"y")
-		  sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g' /etc/default/grub
-			for ((;;))
-			do
-				echo "list available partitions"
-				for dev in /dev/sd[a-z]* /dev/vd[a-z]* /dev/mmcblk[0-9]* /dev/nvme[0-9]*n[0-9]*; do
-					[[ -e "$dev" ]] && echo "$dev"
-				done
-				echo "enter EFI partition to install or install to vdisk (v) ;parted(p)"
-				read ef
-				case $ef in
-					"p")
-						parted
-						;;
-					"v")
-						dd if=/dev/zero of=efi.img bs=1M count=300
-						parted efi.img mklabel gpt
-						parted efi.img mkpart esp fat32 0% 100%
-						parted efi.img set 1 esp on
-						pacman -S multipath-tools
-						kpartx -a -v efi.img
-						mkfs.fat -F32 -s1 /dev/mapper/loop0p1
-						mkdir /boot/EFI
-						mount /dev/mapper/loop0p1 /boot/EFI
-						grub-install --target=x86_64-efi --efi-directory=/boot/EFI
-						grub-mkconfig > /boot/grub/grub.cfg
-						echo "you should copy out the efi file from /boot/EFI to other place"
-						break 3
-						;;
-					*)
-						if [ -b $ef ]
-						then
-							mkdir /boot/EFI
-							read -p "format $ef? (y/*)" fmt
-							if [ $fmt == "y" ]
-							then
-								mkfs.fat -F32 -s1 $ef
-							fi
-							mount $ef /boot/EFI
-							echo "list available devices"
-							for dev in /dev/sd[a-z] /dev/vd[a-z] /dev/mmcblk[0-9] /dev/nvme[0-9]*n[0-9]; do
-								[[ -e "$dev" ]] && echo "$dev"
-							done
-							echo "enter device to install"
-							read de
-							grub-install --target=x86_64-efi --efi-directory=/boot/EFI $de
-							grub-mkconfig > /boot/grub/grub.cfg
-							break 3
-						else
-							echo "partition not found"
-						fi
-						;;
-				esac
-			done
-			;;
-		"n")
-			break
-			;;
-		*)
-			;;
-	esac
-done
+read -p "would you want to run sudo without password? (y/*)" sn
+case $sn in
+    "y")
+        sed -i 's/^# %wheel ALL=(ALL:ALL) NOPASSWD: ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers
+        ;;
+    *)
+        sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
+        ;;
+esac
+read -p "install grub? (y/*)" ig
+case $ig in
+    "y")
+        sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g' /etc/default/grub
+        for ((;;)) do
+            echo "list available partitions"
+            for dev in /dev/sd[a-z]* /dev/vd[a-z]* /dev/mmcblk[0-9]* /dev/nvme[0-9]*n[0-9]*; do
+                [[ -e "$dev" ]] && echo "$dev"
+            done
+            echo "enter EFI partition to install or install to vdisk (v) ;parted(p)"
+            read ef
+            case $ef in
+                "p")
+                    parted
+                    ;;
+                "v")
+                    dd if=/dev/zero of=efi.img bs=1M count=300
+                    parted efi.img mklabel gpt
+                    parted efi.img mkpart esp fat32 0% 100%
+                    parted efi.img set 1 esp on
+                    pacman -S multipath-tools
+                    kpartx -a -v efi.img
+                    mkfs.fat -F32 -s1 /dev/mapper/loop0p1
+                    mkdir /boot/EFI
+                    mount /dev/mapper/loop0p1 /boot/EFI
+                    grub-install --target=x86_64-efi --efi-directory=/boot/EFI
+                    grub-mkconfig > /boot/grub/grub.cfg
+                    echo "you should copy out the efi file from /boot/EFI to other place"
+                    break
+                    ;;
+                *)
+                    if [[ -b $ef ]]; then
+                        mkdir /boot/EFI
+                        read -p "format $ef? (y/*)" fmt
+                        if [[ $fmt == "y" ]]; then
+                            mkfs.fat -F32 -s1 $ef
+                        fi
+                        mount $ef /boot/EFI
+                        echo "list available devices"
+                        for dev in /dev/sd[a-z] /dev/vd[a-z] /dev/mmcblk[0-9] /dev/nvme[0-9]*n[0-9]; do
+                            [[ -e "$dev" ]] && echo "$dev"
+                        done
+                        echo "enter device to install"
+                        read de
+                        grub-install --target=x86_64-efi --efi-directory=/boot/EFI $de
+                        grub-mkconfig > /boot/grub/grub.cfg
+                        break
+                    else
+                        echo "partition not found"
+                    fi
+                    ;;
+            esac
+        done
+        ;;
+    *)
+        ;;
+esac
 
 sed -i 's/#Color/Color/g' /etc/pacman.conf
 echo "install audio system"
@@ -125,8 +111,7 @@ sed -i '$d' /etc/pacman.conf
 pacman -Syy
 echo "bypass polkit? (y/*)"
 read bp
-if [ $bp == "y" ]
-then
+if [[ $bp == "y" ]]; then
 mkdir -p /etc/polkit-1/rules.d
 cat <<EOF > /etc/polkit-1/rules.d/99-all.rules
 polkit.addRule(function(action, subject) {

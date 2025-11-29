@@ -3,8 +3,7 @@
 echo "change mirror to ustc"
 echo 'Server = https://mirrors.ustc.edu.cn/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
 echo "enter root partition to install"
-for ((;;))
-do
+for ((;;)) do
 	echo "list available partitions"
 	for dev in /dev/sd[a-z]* /dev/vd[a-z]* /dev/mmcblk[0-9]* /dev/nvme[0-9]*n[0-9]*; do
 		[[ -e "$dev" ]] && echo "$dev"
@@ -20,8 +19,7 @@ do
 			continue
 			;;
 		*)
-			if [ -b $par ]
-			then
+			if [[ -b $par ]]; then
 				echo "select partition : $par"
 				break
 			else
@@ -30,27 +28,14 @@ do
 			;;
 	esac
 done
-for ((;;))
-do
-	read -p "format $par? (y/*)" f
-	case $f in
-		"y")
-			mkfs.ext4 $par
-			break
-			;;
-		"n")
-			echo "without format will cause some problem after install"
-			read -p "are you sure? (y/*)" nofmt
-			if [ $nofmt != y ]
-			then
-				continue
-			fi
-			break
-			;;
-		*)
-			;;
-	esac
-done
+read -p "format $par? (y/*)" f
+case $f in
+    "y")
+        mkfs.ext4 $par
+        ;;
+    *)
+        ;;
+esac
 echo "mount $par to /mnt"
 mount $par /mnt
 echo "install base packages to new root"
