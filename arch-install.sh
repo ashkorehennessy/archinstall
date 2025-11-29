@@ -39,7 +39,7 @@ esac
 echo "mount $par to /mnt"
 mount $par /mnt
 echo "install base packages to new root"
-pacstrap /mnt base linux linux-firmware dhcpcd vim sudo grub efibootmgr intel-ucode exfat-utils dosfstools openssh base-devel bash-completion unzip zip wget net-tools bind-tools htop btop fastfetch rsync
+pacstrap /mnt base linux linux-firmware
 echo "generate fstab to new root"
 genfstab -U /mnt >> /mnt/etc/fstab
 echo "download postinstall script"

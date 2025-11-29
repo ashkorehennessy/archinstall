@@ -2,6 +2,7 @@
 #by Ashkore
 echo "change mirror to ustc"
 echo 'Server = https://mirrors.ustc.edu.cn/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
+pacman -Sy --noconfirm dhcpcd vim sudo grub efibootmgr intel-ucode exfat-utils dosfstools openssh base-devel bash-completion unzip zip wget net-tools bind-tools htop btop fastfetch rsync
 echo "set timezone to Asia/Shanghai"
 ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 hwclock --systohc
@@ -94,6 +95,7 @@ echo "configure plasma"
 systemctl enable NetworkManager
 systemctl enable sddm
 systemctl enable dhcpcd
+systemctl enable sshd
 echo "configure archlinuxcn"
 echo '[archlinuxcn]' >> /etc/pacman.conf
 echo 'Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch' >> /etc/pacman.conf
