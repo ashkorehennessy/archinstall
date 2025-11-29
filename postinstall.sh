@@ -154,6 +154,48 @@ polkit.addRule(function(action, subject) {
 });
 EOF
 fi
+echo "install graphics stack"
+declare -A vendors=(
+    ["0x8086"]="intel"
+    ["0x1002"]="amd"
+    ["0x1022"]="amd"
+    ["0x10de"]="nvidia"
+)
+
+gpu_list=()
+for card in /sys/class/drm/card*/device/vendor; do
+    vendor_id=$(cat "$card")
+    if [[ -n "${vendors[$vendor_id]}" ]]; then
+        gpu_list+=("${vendors[$vendor_id]}")
+    else
+        gpu_list+=("other")
+    fi
+done
+
+gpus=$(printf "%s\n" "${gpu_list[@]}" | sort -u)
+
+for gpu in $gpus; do
+    case "$gpu" in
+        intel)
+            echo "Intel GPU detected"
+            pacman -S --noconfirm vulkan-intel intel-media-driver
+            ;;
+
+        amd)
+            echo "AMD GPU detected"
+            pacman -S --noconfirm vulkan-radeon mesa
+            ;;
+
+        nvidia)
+            echo "NVIDIA GPU detected (not support yet)"
+            ;;
+
+        *)
+            echo "Unknown GPU type, skipping..."
+            ;;
+    esac
+done
+pacman -S --noconfirm vulkan-icd-loader libva-utils vulkan-tools
 fastfetch
 echo "install finished, reboot to use your new system"
 
