@@ -94,7 +94,7 @@ pacman -Sy --noconfirm --needed plasma sddm sddm-kcm xorg wayland kate konsole y
 echo "configure plasma"
 systemctl enable NetworkManager
 systemctl enable sddm
-systemctl enable dhcpcd
+systemctl disable dhcpcd
 systemctl enable sshd
 echo "configure archlinuxcn"
 echo '[archlinuxcn]' >> /etc/pacman.conf
